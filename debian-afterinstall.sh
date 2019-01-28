@@ -28,7 +28,7 @@ echo "Which user should be in sudo?"
 read -s usuario
 usermod -a -G sudo $usuario
 fi
-
+apt install debian-keyring -y
 apt install synaptic apt-xapian-index gdebi gksu -y
 apt install firmware-linux -y
 apt install ttf-freefont ttf-mscorefonts-installer -y
@@ -38,7 +38,7 @@ apt install file-roller evince doidon qalculate clementine vlc gimp shotwell gpa
 apt install ufw -y
 apt install gufw -y
 apt install libavcodec-extra ffmpeg -y
-apt install pavucontrol jackd mixxx ncmpdcpp -y
+apt install pavucontrol audacity jackd mixxx ncmpdcpp -y
 apt install network-manager-gnome -y
 apt install openssh-server openssl openvpn samba perl phpmyadmin sqlite3 -y
 apt install apt-show-versions libio-pty-perl libauthen-pam-perl -y
