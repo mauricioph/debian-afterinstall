@@ -14,16 +14,16 @@ nonfree=$(cat /etc/apt/sources.list | grep deb | sed '/^#/d' | awk 'NF>2{print $
 
 if [ -z "$nonfree" ]
 then cat /etc/apt/sources.list | grep deb | sed 's/main/main\ contrib\ non-free/g' > /tmp/.source.list
-mv /etc/apt/source.list /etc/apt/source.list.$(date +%d-%m-%Y).bk
-mv /tmp/.source.list /etc/apt/source.list
+mv /etc/apt/sources.list /etc/apt/sources.list.$(date +%d-%m-%Y).bk
+mv /tmp/.source.list /etc/apt/sources.list
 else echo "already non-free and contrib repo installed"
 fi
 
 for i in ${DIR}/*.list
-do if [ ! -f /etc/apt/sources.list.d/${i} ]
-mv ${i} /etc/apt/sources.list.d/
-else echo "${i} is already in place"
-fi
+do  if [ ! -f /etc/apt/sources.list.d/${i} ]
+      then mv ${i} /etc/apt/sources.list.d/
+      else echo "${i} is already in place"
+    fi
 done
 
 apt install debian-keyring -y
