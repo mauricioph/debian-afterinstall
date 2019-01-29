@@ -2,6 +2,7 @@
 #
 #
 #
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 if [[ $EUID -ne 0 ]]; then
   echo "This script must be run as root" 1>&2
@@ -18,7 +19,7 @@ mv /tmp/.source.list /etc/apt/source.list
 else echo "already non-free and contrib repo installed"
 fi
 
-for i in *.list
+for i in ${DIR}/*.list
 do if [ ! -f /etc/apt/sources.list.d/${i} ]
 mv ${i} /etc/apt/sources.list.d/
 else echo "${i} is already in place"
