@@ -16,12 +16,14 @@ if [ -z "$nonfree" ]
 then cat /etc/apt/sources.list | grep deb | sed 's/main/main\ contrib\ non-free/g' > /tmp/.source.list
 mv /etc/apt/sources.list /etc/apt/sources.list.$(date +%d-%m-%Y).bk
 mv /tmp/.source.list /etc/apt/sources.list
+echo "list updated"
 else echo "already non-free and contrib repo installed"
 fi
 
 for i in ${DIR}/*.list
 do  if [ ! -f /etc/apt/sources.list.d/${i} ]
       then mv ${i} /etc/apt/sources.list.d/
+      echo "${i} list installed"
       else echo "${i} is already in place"
     fi
 done
