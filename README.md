@@ -1,1 +1,27 @@
 # debian-afterinstall
+
+This the script I use to deploy my Debian "profile" to as many computers I need.
+
+Whenever I need to get the applications of my preference I just update the apt, install git, give the script execute privileges and ran it.
+
+In other words, just after install these are the commands I ran:
+
+$ apt update
+$ apt install git
+$ cd /tmp
+$ git clone https://github.com/mauricioph/debian-afterinstall.git
+$ chmod +x debian-afterinstall
+$ ./debian-afterinstall
+
+This will install sudo and add a user to the group
+Add to the sources.list the contrib and non-free repositories
+In case you do not have the repositories for VLC, Plex Media, Mopidy and Webmin.
+
+The following apps will be installed:
+Synaptic, file-roller, evince, clementine, vlc, gimp, shotwell, gparted, gnome-disk-utility, libreoffice, ufw, ffmpeg, audacity, pavucontrol, mixxx, ncmpdcpp, mpd, openssl, openvpn, samba, perl, phpmyadmin, sqlite3, rsync, testdisk, gdebi, ranger, restartd, smartmontools, fdupes and zbackup
+
+Also some libraries to give these apps suport.
+
+The firewall will block all ports, leaving only these services accessible:
+SSH, Web server listening on 80,8080,8008,443
+Samba and webmin
