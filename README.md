@@ -5,13 +5,14 @@ This the script I use to deploy my Debian "profile" to as many computers I need.
 Whenever I need to get the applications of my preference I just update the apt, install git, give the script execute privileges and ran it.
 
 In other words, just after install these are the commands I ran:
-
+<pre>
 $ apt update
 $ apt install git
 $ cd /tmp
 $ git clone https://github.com/mauricioph/debian-afterinstall.git
 $ chmod +x debian-afterinstall
 $ ./debian-afterinstall
+</pre>
 
 This will install sudo and add a user to the group
 Add to the sources.list the contrib and non-free repositories
