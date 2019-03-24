@@ -1,4 +1,0 @@
-# deb https://download.virtualbox.org/virtualbox/debian <mydist> contrib
-deb https://download.virtualbox.org/virtualbox/debian stretch contrib
-# deb http://download.virtualbox.org/virtualbox/debian stretch contrib
-# sudo apt-key add oracle_vbox.asc
