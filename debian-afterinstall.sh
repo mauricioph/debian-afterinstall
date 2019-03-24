@@ -126,7 +126,7 @@ mkdir -p build && cd build/
 make -j8
 sudo make install
 }
-echo "Should i3 be compiled now?
+echo "Should i3 be compiled now?"
 read i3now
 case ${i3now} in
 	y)
@@ -141,6 +141,5 @@ case ${i3now} in
 esac
 
 cd /opt/repositories
-
 echo "All is installed, here are the programs recently installed"
 dpkg-query -l 
