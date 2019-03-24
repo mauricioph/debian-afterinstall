@@ -115,13 +115,31 @@ cd /opt/repositories
 sudo git clone https://github.com/tobi-wan-kenobi/bumblebee-status.git
 sudo git clone https://github.com/mauricioph/debian-afterinstall.git
 git clone https://github.com/Airblader/i3 i3-gaps
-cd i3-gaps
+
+
+finction installi3(){
+cd /opt/repositories/i3-gaps
 autoreconf --force --install
 rm -fr build
 mkdir -p build && cd build/
 ../configure --prefix=/usr --sysconfdir=/etc --disable-sanitizers
 make -j8
 sudo make install
+}
+echo "Should i3 be compiled now?
+read i3now
+case ${i3now} in
+	y)
+	installi3
+	;;
+	yes)
+	installi3
+	;;
+	*)
+	echo "Skipping i3 compilation"
+	;;
+esac
+
 cd /opt/repositories
 
 echo "All is installed, here are the programs recently installed"
