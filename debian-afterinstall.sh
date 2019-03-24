@@ -119,7 +119,7 @@ cd i3-gaps
 autoreconf --force --install
 rm -fr build
 mkdir -p build && cd build/
-../configure --prefix=/opt --sysconfdir=/etc --disable-sanitizers
+../configure --prefix=/usr --sysconfdir=/etc --disable-sanitizers
 make -j8
 sudo make install
 cd /opt/repositories
