@@ -12,7 +12,7 @@ fi
 [ -d /sys/firmware/efi ] && echo "EFI boot on HDD" || echo "Legacy boot on HDD"
 
 echo "Adding contrib non-free list to apt"
-cat > /etc/apt/source.list << EOF
+cat > /etc/apt/sources.list << EOF
 # Criado por mauricio atraves do script debian-afterinstall.sh
 # deb cdrom:[Debian GNU/Linux 9.1.0 _Stretch_ - Official amd64 NETINST 20170722-11:28]/ stretch main
 # deb cdrom:[Debian GNU/Linux 9.1.0 _Stretch_ - Official amd64 NETINST 20170722-11:28]/ stretch main
