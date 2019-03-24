@@ -117,7 +117,7 @@ sudo git clone https://github.com/mauricioph/debian-afterinstall.git
 git clone https://github.com/Airblader/i3 i3-gaps
 
 
-finction installi3(){
+function installi3(){
 cd /opt/repositories/i3-gaps
 autoreconf --force --install
 rm -fr build
