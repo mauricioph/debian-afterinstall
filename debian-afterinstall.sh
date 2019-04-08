@@ -45,7 +45,9 @@ wget -q -O - https://downloads.plex.tv/plex-keys/PlexSign.key | apt-key add -
 wget -q -O - http://download.videolan.org/pub/debian/videolan-apt.asc | apt-key add -
 wget -q -O - https://apt.mopidy.com/mopidy.gpg | apt-key add -
 wget -q -O - http://www.webmin.com/jcameron-key.asc | apt-key add -
-
+wget -q https://dl-ssl.google.com/linux/linux_signing_key.pub
+apt-key add linux_signing_key.pub
+rm -f linux_signing_key.pub
 
 apt install apt-transport-https
 apt update
