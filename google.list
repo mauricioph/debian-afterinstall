@@ -1,0 +1,5 @@
+# wget https://dl-ssl.google.com/linux/linux_signing_key.pub
+
+# sudo apt-key add linux_signing_key.pub
+deb http://dl.google.com/linux/chrome/deb/ stable main
+
