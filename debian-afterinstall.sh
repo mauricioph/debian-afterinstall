@@ -67,20 +67,20 @@ echo "Installing non-free system apps"
 apt install default-jre smartmontools fdupes zbackup software-properties-common dirmngr ranger restartd firmware-linux-nonfree gparted ntfs* testdisk gdebi firmware-linux -y
 
 echo "Installing base for i3-gaps"
-apt install gcc make dh-autoreconf libxcb-keysyms1-dev libpango1.0-dev libxcb-util0-dev xcb libxcb1-dev libxcb-icccm4-dev libyajl-dev libev-dev libxcb-xkb-dev libxcb-cursor-dev libxkbcommon-dev libxcb-xinerama0-dev libxkbcommon-x11-dev libstartup-notification0-dev libxcb-randr0-dev libxcb-xrm0 libxcb-xrm-dev libxcb-shape0-dev
+apt install gcc make fancontrol read-edid i2c-tools conky-all fonts-font-awesome dh-autoreconf libxcb-keysyms1-dev libpango1.0-dev libxcb-util0-dev xcb libxcb1-dev libxcb-icccm4-dev libyajl-dev libev-dev libxcb-xkb-dev libxcb-cursor-dev libxkbcommon-dev libxcb-xinerama0-dev libxkbcommon-x11-dev libstartup-notification0-dev libxcb-randr0-dev libxcb-xrm0 libxcb-xrm-dev libxcb-shape0-dev
 
 echo "Installing fonts"
 apt install fonts-font-awesome ttf-freefont ttf-mscorefonts-installer fonts-noto qt4-qtconfig -y
 
 
 echo "Installing Internet of Things apps"
-apt install rsync network-manager-gnome openssh-server openssl openvpn samba perl phpmyadmin sqlite3 ufw -y
+apt install rsync network-manager-gnome openssh-server openssl openvpn samba perl phpmyadmin sqlite3 ufw mtools -y
 
 echo "Installing Office apps"
-apt install libreoffice imagemagick swftools ghostscript pdftohtml ffmpeg tesseract-ocr tesseract-ocr-eng clamav imagemagick ghostscript file-roller evince qalculate clementine vlc gimp shotwell gparted gnome-disk-utility libreoffice-writer libreoffice-calc libreoffice-impress -y
+apt install libreoffice scrot feh swftools ghostscript pdftohtml ffmpeg tesseract-ocr tesseract-ocr-eng clamav imagemagick ghostscript file-roller evince qalculate clementine vlc gimp shotwell gparted gnome-disk-utility libreoffice-writer libreoffice-calc libreoffice-impress -y
 
 echo "Installing Media apps"
-sudo apt install mkvtoolnix-gui mplayer lsdvd libdvdcss2 aegisub dos2unix squashfs-tools obs-studio libavcodec-extra ffmpeg pavucontrol audacity jackd mixxx ncmpcpp -y
+sudo apt install python-psutil python-netifaces python-requests python-power upower x11-xserver-utils mkvtoolnix-gui mplayer lsdvd libdvdcss2 aegisub dos2unix squashfs-tools obs-studio libavcodec-extra ffmpeg pavucontrol audacity jackd mixxx ncmpcpp -y
 
 function firewallrules(){
 ufw reset 
@@ -129,6 +129,11 @@ done
 chmod 0555 wallpaper/DEBIAN/postinst wallpaper/usr/local/bin/gwallpaper 
 dpkg-deb --build wallpaper
 dpkg --install wallpaper.deb
+
+cp i3-stuff/lock-fusy.sh /usr/local/bin
+chmod +x /usr/local/bin/lock-fusy.sh
+cp i3-stuff/systemd/wakelock.service /etc/systemd/system/
+sudo systemctl enable wakelock.service 
 
 function installi3(){
 cd /opt/repositories/i3-gaps
