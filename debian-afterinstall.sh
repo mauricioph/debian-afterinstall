@@ -61,7 +61,7 @@ read -s usuario
 usermod -a -G sudo $usuario
 
 echo "Installing systems apps"
-apt install synaptic apt-xapian-index gdebi gksu apt-show-versions libio-pty-perl libauthen-pam-perl asciidoc xmlto uuid-dev libattr1-dev e2fsprogs f2fs-tools hfsutils hfsprogs jfsutils reiser4progs xfsprogs xfsdump lm-sensors upower zlib1g-dev libacl1-dev e2fslibs-dev libblkid-dev liblzo2-dev macfanctld unrar htop rofi i3blocks feh compton unclutter nbtscan nmap i3lock zathura suckless surf puddletag sonata alarm-clock-applet lightdm-gtk-greeter lightdm-gtk-greeter-settings light-locker -y
+apt install synaptic apt-xapian-index gdebi gksu apt-show-versions libio-pty-perl libauthen-pam-perl asciidoc xmlto uuid-dev libattr1-dev e2fsprogs f2fs-tools hfsutils hfsprogs jfsutils reiser4progs xfsprogs xfsdump lm-sensors upower zlib1g-dev libacl1-dev e2fslibs-dev libblkid-dev liblzo2-dev macfanctld unrar htop rofi i3blocks feh compton unclutter nbtscan nmap i3lock zathura suckless-tools surf puddletag sonata alarm-clock-applet lightdm-gtk-greeter lightdm-gtk-greeter-settings light-locker -y
 
 echo "Installing non-free system apps"
 apt install default-jre smartmontools fdupes zbackup software-properties-common dirmngr ranger restartd firmware-linux-nonfree gparted ntfs* testdisk gdebi firmware-linux -y
@@ -80,7 +80,7 @@ echo "Installing Office apps"
 apt install libreoffice imagemagick swftools ghostscript pdftohtml ffmpeg tesseract-ocr tesseract-ocr-eng clamav imagemagick ghostscript file-roller evince qalculate clementine vlc gimp shotwell gparted gnome-disk-utility libreoffice-writer libreoffice-calc libreoffice-impress -y
 
 echo "Installing Media apps"
-sudo apt install mkvtoolnix-gui mplayer lsdvd libdvdcss aegisub dos2unix mksquashfs xwinwrap obs-studio libavcodec-extra ffmpeg pavucontrol murrine audacity jackd mixxx ncmpdcpp -y
+sudo apt install mkvtoolnix-gui mplayer lsdvd libdvdcss2 aegisub dos2unix squashfs-tools obs-studio libavcodec-extra ffmpeg pavucontrol audacity jackd mixxx ncmpcpp -y
 
 function firewallrules(){
 ufw reset 
@@ -114,10 +114,21 @@ echo "Doing git repositories installation on /opt"
 cd /opt
 mkdir -p /opt/repositories
 cd /opt/repositories
-sudo git clone https://github.com/tobi-wan-kenobi/bumblebee-status.git
-sudo git clone https://github.com/mauricioph/debian-afterinstall.git
+git clone https://github.com/tobi-wan-kenobi/bumblebee-status.git
+git clone https://github.com/mauricioph/debian-afterinstall.git
 git clone https://github.com/Airblader/i3 i3-gaps
+git clone https://github.com/mauricioph/wallpaper.git
+git clone https://github.com/mauricioph/myscripts.git
+git clone https://github.com/mauricioph/i3-stuff.git
 
+for i in myscripts/*
+do cp "${i}" /usr/local/bin/
+chmod +x "/usr/local/bin/${i}"
+done
+
+chmod 0555 wallpaper/DEBIAN/postinst wallpaper/usr/local/bin/gwallpaper 
+dpkg-deb --build wallpaper
+dpkg --install wallpaper.deb
 
 function installi3(){
 cd /opt/repositories/i3-gaps
