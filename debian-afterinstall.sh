@@ -14,18 +14,27 @@ fi
 echo "Adding contrib non-free list to apt"
 cat > /etc/apt/sources.list << EOF
 # Criado por mauricio atraves do script debian-afterinstall.sh
-# deb cdrom:[Debian GNU/Linux 9.1.0 _Stretch_ - Official amd64 NETINST 20170722-11:28]/ stretch main
-# deb cdrom:[Debian GNU/Linux 9.1.0 _Stretch_ - Official amd64 NETINST 20170722-11:28]/ stretch main
+#------------------------------------------------------------------------------#
+#                   OFFICIAL UK DEBIAN REPOS                    
+#------------------------------------------------------------------------------#
+# Edit these lines below based on the output from this page pointing your country repositories
+# https://debgen.simplylinux.ch
+#
 
-deb http://ftp.uk.debian.org/debian/ stretch main contrib non-free
-deb-src http://ftp.uk.debian.org/debian/ stretch main contrib non-free
+###### Debian Main Repos
+deb http://ftp.uk.debian.org/debian/ stable main contrib non-free
+deb-src http://ftp.uk.debian.org/debian/ stable main contrib non-free
 
-deb http://security.debian.org/debian-security stretch/updates main
-deb-src http://security.debian.org/debian-security stretch/updates main
+deb http://ftp.uk.debian.org/debian/ stable-updates main contrib non-free
+deb-src http://ftp.uk.debian.org/debian/ stable-updates main contrib non-free
 
-# stretch-updates, previously known as 'volatile'
-deb http://ftp.uk.debian.org/debian/ stretch-updates main contrib non-free
-deb-src http://ftp.uk.debian.org/debian/ stretch-updates main contrib non-free
+deb http://security.debian.org/ stable/updates main
+deb-src http://security.debian.org/ stable/updates main
+
+deb http://ftp.debian.org/debian stretch-backports main
+deb-src http://ftp.debian.org/debian stretch-backports main
+
+# End of the editable area
 
 EOF
 
@@ -41,6 +50,14 @@ done
 echo "Getting the signature of the repositories"
 
 apt install debian-keyring -y
+apt install curl wget apt-transport-https dirmngr
+
+wget http://www.deb-multimedia.org/pool/main/d/deb-multimedia-keyring/deb-multimedia-keyring_2016.8.1_all.deb 
+dpkg -i deb-multimedia-keyring_2016.8.1_all.deb
+curl -s https://updates.signal.org/desktop/apt/keys.asc | apt-key add -
+apt-key adv --keyserver ha.pool.sks-keyservers.net --recv-keys 1F3045A5DF7587C3
+apt-key adv --keyserver ha.pool.sks-keyservers.net --recv-keys A87FF9DF48BF1C90
+apt-key adv --keyserver ha.pool.sks-keyservers.net --recv-keys 74A941BA219EC810
 wget -q -O - https://downloads.plex.tv/plex-keys/PlexSign.key | apt-key add -
 wget -q -O - http://download.videolan.org/pub/debian/videolan-apt.asc | apt-key add -
 wget -q -O - https://apt.mopidy.com/mopidy.gpg | apt-key add -
@@ -48,8 +65,8 @@ wget -q -O - http://www.webmin.com/jcameron-key.asc | apt-key add -
 wget -q https://dl-ssl.google.com/linux/linux_signing_key.pub
 apt-key add linux_signing_key.pub
 rm -f linux_signing_key.pub
+rm -f deb-multimedia-keyring_2016.8.1_all.deb
 
-apt install apt-transport-https
 apt update
 apt list --upgradable
 apt upgrade -y
