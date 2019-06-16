@@ -140,7 +140,7 @@ git clone https://github.com/mauricioph/i3-stuff.git
 
 for i in myscripts/*
 do cp "${i}" /usr/local/bin/
-chmod +x "/usr/local/bin/${i}"
+chmod +x "/usr/local/bin/$(basename ${i})"
 done
 
 chmod 0555 wallpaper/DEBIAN/postinst wallpaper/usr/local/bin/gwallpaper 
