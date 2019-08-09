@@ -58,9 +58,6 @@ curl -s https://updates.signal.org/desktop/apt/keys.asc | apt-key add -
 apt-key adv --keyserver ha.pool.sks-keyservers.net --recv-keys 1F3045A5DF7587C3
 apt-key adv --keyserver ha.pool.sks-keyservers.net --recv-keys A87FF9DF48BF1C90
 apt-key adv --keyserver ha.pool.sks-keyservers.net --recv-keys 74A941BA219EC810
-wget -q -O - https://downloads.plex.tv/plex-keys/PlexSign.key | apt-key add -
-wget -q -O - http://download.videolan.org/pub/debian/videolan-apt.asc | apt-key add -
-wget -q -O - https://apt.mopidy.com/mopidy.gpg | apt-key add -
 wget -q -O - http://www.webmin.com/jcameron-key.asc | apt-key add -
 wget -q https://dl-ssl.google.com/linux/linux_signing_key.pub
 apt-key add linux_signing_key.pub
@@ -128,8 +125,11 @@ case ${firewall} in
 esac
 
 echo "Doing git repositories installation on /opt"
-cd /opt
-mkdir -p /opt/repositories
+
+if [ ! -d /opt/repositories ]
+then mkdir -p /opt/repositories
+fi
+
 cd /opt/repositories
 git clone https://github.com/tobi-wan-kenobi/bumblebee-status.git
 git clone https://github.com/mauricioph/debian-afterinstall.git
