@@ -31,8 +31,8 @@ deb-src http://ftp.uk.debian.org/debian/ stable-updates main contrib non-free
 deb http://security.debian.org/ stable/updates main
 deb-src http://security.debian.org/ stable/updates main
 
-deb http://ftp.debian.org/debian stretch-backports main
-deb-src http://ftp.debian.org/debian stretch-backports main
+deb http://ftp.debian.org/debian buster-backports main contrib non-free
+deb-src http://ftp.debian.org/debian buster-backports main contrib non-free
 
 # End of the editable area
 
@@ -75,7 +75,7 @@ read -s usuario
 usermod -a -G sudo $usuario
 
 echo "Installing systems apps"
-apt install synaptic apt-xapian-index gdebi gksu apt-show-versions libio-pty-perl libauthen-pam-perl asciidoc xmlto uuid-dev libattr1-dev e2fsprogs f2fs-tools hfsutils hfsprogs jfsutils reiser4progs xfsprogs xfsdump lm-sensors upower zlib1g-dev libacl1-dev e2fslibs-dev libblkid-dev liblzo2-dev macfanctld unrar htop rofi i3blocks feh compton unclutter nbtscan nmap i3lock zathura suckless-tools surf puddletag sonata alarm-clock-applet lightdm-gtk-greeter lightdm-gtk-greeter-settings light-locker -y
+apt install synaptic apt-xapian-index gdebi gksu yad apt-show-versions libio-pty-perl libauthen-pam-perl asciidoc xmlto uuid-dev libattr1-dev e2fsprogs f2fs-tools hfsutils hfsprogs jfsutils reiser4progs xfsprogs xfsdump lm-sensors upower zlib1g-dev libacl1-dev e2fslibs-dev libblkid-dev liblzo2-dev macfanctld unrar htop rofi i3blocks feh compton unclutter nbtscan nmap i3lock zathura suckless-tools surf puddletag sonata alarm-clock-applet lightdm-gtk-greeter lightdm-gtk-greeter-settings light-locker -y
 
 echo "Installing non-free system apps"
 apt install default-jre smartmontools fdupes zbackup software-properties-common dirmngr ranger restartd firmware-linux-nonfree gparted ntfs* testdisk gdebi firmware-linux -y
@@ -161,6 +161,55 @@ mkdir -p build && cd build/
 make -j8
 sudo make install
 }
+
+function swayout(){
+cd /opt/repositories
+
+mkdir sway-src
+cd sway-src/
+sudo apt update
+sudo apt install build-essential cmake meson libwayland-dev wayland-protocols  libegl1-mesa-dev libgles2-mesa-dev libdrm-dev libgbm-dev libinput-dev  libxkbcommon-dev libudev-dev libpixman-1-dev libsystemd-dev libcap-dev  libxcb1-dev libxcb-composite0-dev libxcb-xfixes0-dev libxcb-xinput-dev  libxcb-image0-dev libxcb-render-util0-dev libx11-xcb-dev libxcb-icccm4-dev  freerdp2-dev libwinpr2-dev libpng-dev libavutil-dev libavcodec-dev  libavformat-dev universal-ctags
+
+git clone https://github.com/swaywm/wlroots.git
+cd wlroots/
+git checkout 0.6.0
+meson build
+sudo ninja -C build install
+sudo apt install autoconf libtool
+cd ..
+
+git clone https://github.com/json-c/json-c.git
+cd json-c
+git checkout json-c-0.13.1-20180305
+sh autogen.sh
+./configure --enable-threading --prefix=/usr/local CPUCOUNT=4
+make -j 4
+sudo make install
+sudo ldconfig
+cd ..
+
+git clone https://git.sr.ht/~sircmpwn/scdoc
+cd scdoc/
+git checkout 1.9.4
+make PREFIX=/usr/local -j 4
+sudo make PREFIX=/usr/local install
+sudo apt install libpcre3-dev libcairo2-dev libpango1.0-dev libgdk-pixbuf2.0-dev
+cd ..
+
+git clone https://github.com/swaywm/sway.git
+cd sway/
+git checkout 1.1.1
+meson build
+sudo ninja -C build install
+cd ..
+
+git clone https://github.com/swaywm/swaybg.git
+cd swaybg/
+git checkout 1.0 
+meson build
+sudo ninja -C build install
+}
+
 echo "Should i3 be compiled now?"
 read i3now
 case ${i3now} in
@@ -173,6 +222,14 @@ case ${i3now} in
 	*)
 	echo "Skipping i3 compilation"
 	;;
+esac
+
+echo "To be future proof it is recomendable that you install sway (i3 for wayland), do you want to do it now?"
+read swayornot
+case "${swayornot}" in
+	y) swayout ;;
+	yes) swayout ;;
+	*) echo "Skipping sway compilation" ;;
 esac
 
 cd /opt/repositories
