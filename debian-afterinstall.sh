@@ -142,11 +142,11 @@ for i in myscripts/*
 do cp "${i}" /usr/local/bin/
 chmod +x "/usr/local/bin/$(basename ${i})"
 done
-
+function packwall(){
 chmod 0555 wallpaper/DEBIAN/postinst wallpaper/usr/local/bin/gwallpaper 
 dpkg-deb --build wallpaper
 dpkg --install wallpaper.deb
-
+}
 cp i3-stuff/lock-fusy.sh /usr/local/bin
 chmod +x /usr/local/bin/lock-fusy.sh
 cp i3-stuff/systemd/wakelock.service /etc/systemd/system/
@@ -168,14 +168,14 @@ cd /opt/repositories
 mkdir sway-src
 cd sway-src/
 sudo apt update
-sudo apt install build-essential cmake meson libwayland-dev wayland-protocols  libegl1-mesa-dev libgles2-mesa-dev libdrm-dev libgbm-dev libinput-dev  libxkbcommon-dev libudev-dev libpixman-1-dev libsystemd-dev libcap-dev  libxcb1-dev libxcb-composite0-dev libxcb-xfixes0-dev libxcb-xinput-dev  libxcb-image0-dev libxcb-render-util0-dev libx11-xcb-dev libxcb-icccm4-dev  freerdp2-dev libwinpr2-dev libpng-dev libavutil-dev libavcodec-dev  libavformat-dev universal-ctags
+sudo apt install build-essential cmake meson libwayland-dev wayland-protocols  libegl1-mesa-dev libgles2-mesa-dev libdrm-dev libgbm-dev libinput-dev  libxkbcommon-dev libudev-dev libpixman-1-dev libsystemd-dev libcap-dev  libxcb1-dev libxcb-composite0-dev libxcb-xfixes0-dev libxcb-xinput-dev  libxcb-image0-dev libxcb-render-util0-dev libx11-xcb-dev libxcb-icccm4-dev  freerdp2-dev libwinpr2-dev libpng-dev libavutil-dev libavcodec-dev  libavformat-dev universal-ctags -y
 
 git clone https://github.com/swaywm/wlroots.git
 cd wlroots/
 git checkout 0.6.0
 meson build
 sudo ninja -C build install
-sudo apt install autoconf libtool
+sudo apt install autoconf libtool -y
 cd ..
 
 git clone https://github.com/json-c/json-c.git
@@ -193,7 +193,7 @@ cd scdoc/
 git checkout 1.9.4
 make PREFIX=/usr/local -j 4
 sudo make PREFIX=/usr/local install
-sudo apt install libpcre3-dev libcairo2-dev libpango1.0-dev libgdk-pixbuf2.0-dev
+sudo apt install libpcre3-dev libcairo2-dev libpango1.0-dev libgdk-pixbuf2.0-dev -y
 cd ..
 
 git clone https://github.com/swaywm/sway.git
@@ -232,6 +232,13 @@ case "${swayornot}" in
 	*) echo "Skipping sway compilation" ;;
 esac
 
+echo "We have 350+ wallpapers to be installed, do you want to install them?"
+read pack
+case ${pack} in
+	y) packwall ;;
+	yes) packwall ;;
+	*) echo "No wallpaper installed"
+esac
 cd /opt/repositories
 echo "All is installed, here are the programs recently installed"
 dpkg-query -l 
