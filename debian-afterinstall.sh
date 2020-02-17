@@ -94,7 +94,60 @@ echo "Installing Office apps"
 apt install libreoffice scrot feh swftools ghostscript pdftohtml ffmpeg tesseract-ocr tesseract-ocr-eng clamav imagemagick ghostscript file-roller evince qalculate clementine vlc gimp shotwell gparted gnome-disk-utility libreoffice-writer libreoffice-calc libreoffice-impress -y
 
 echo "Installing Media apps"
-sudo apt install python-psutil python-netifaces python-requests python-power upower x11-xserver-utils mkvtoolnix-gui mplayer lsdvd libdvdcss2 aegisub dos2unix squashfs-tools obs-studio libavcodec-extra ffmpeg pavucontrol audacity jackd mixxx ncmpcpp -y
+apt install python-psutil python-netifaces python-requests python-power upower x11-xserver-utils mkvtoolnix-gui mplayer lsdvd libdvdcss2 aegisub dos2unix squashfs-tools obs-studio libavcodec-extra ffmpeg pavucontrol audacity jackd mixxx ncmpcpp -y
+
+function nextcloud(){
+apt install mlocate apache2 libapache2-mod-php mariadb-client mariadb-server wget unzip bzip2 curl php php-common php-curl php-gd php-mbstring php-mysql php-xml php-zip php-intl php-apcu php-redis php-http-request
+
+cat <<EOF>> /etc/apache2/sites-available/nextcloud.conf
+<VirtualHost *:80>
+ServerAdmin webmaster@localhost
+DocumentRoot /var/www/nextcloud
+Alias /nextcloud "/var/www/nextcloud/"
+ 
+<Directory "/var/www/nextcloud/">
+Options +FollowSymlinks
+AllowOverride All
+ 
+<IfModule mod_dav.c>
+Dav off
+</IfModule>
+ 
+Require all granted
+ 
+SetEnv HOME /var/www/nextcloud
+SetEnv HTTP_HOME /var/www/nextcloud
+</Directory>
+ 
+ErrorLog ${APACHE_LOG_DIR}/nextcloud_error_log
+CustomLog ${APACHE_LOG_DIR}/nextcloud_access_log common
+</VirtualHost>
+EOF
+
+cat <<EOF>> /tmp/sql-inject
+CREATE DATABASE nextcloud;
+CREATE USER 'nextcloud'@'localhost' IDENTIFIED BY 'YOUR_PASSWORD_HERE';
+GRANT ALL PRIVILEGES ON nextcloud.* TO 'nextcloud'@'localhost';
+FLUSH PRIVILEGES;
+EOF
+
+mysql -u root -p < /tmp/sql-inject
+
+cd /var/www
+wget https://download.nextcloud.com/server/releases/nextcloud-18.0.1.zip
+unzip nextcloud-18.0.1.zip
+mkdir nextcloud/data
+chown -R www-data:www-data nextcloud
+a2ensite nextcloud.conf
+a2dissite 000-default.conf
+systemctl restart apache2
+systemctl enable apache2 mariadb
+
+clear
+echo "Nextcloud installed, open the browser on https://[server-ip]/nextcloud"
+echo "to continue the configuration"
+
+}
 
 function firewallrules(){
 ufw reset 
