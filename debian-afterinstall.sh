@@ -15,7 +15,7 @@ echo "Adding contrib non-free list to apt"
 cat > /etc/apt/sources.list << EOF
 # Criado por mauricio atraves do script debian-afterinstall.sh
 #------------------------------------------------------------------------------#
-#                   OFFICIAL UK DEBIAN REPOS                    
+#                   OFFICIAL UK DEBIAN REPOSITORY
 #------------------------------------------------------------------------------#
 # Edit these lines below based on the output from this page pointing your country repositories
 # https://debgen.simplylinux.ch
@@ -38,15 +38,6 @@ deb-src http://ftp.debian.org/debian buster-backports main contrib non-free
 
 EOF
 
-echo "Adding lists to sources.list.d folder"
-for i in ${DIR}/*.list
-do  if [ ! -f /etc/apt/sources.list.d/${i} ]
-      then mv ${i} /etc/apt/sources.list.d/
-      echo "${i} list installed"
-      else echo "${i} is already in place"
-    fi
-done
-
 echo "Getting the signature of the repositories"
 
 apt install debian-keyring -y
@@ -58,15 +49,10 @@ curl -s https://updates.signal.org/desktop/apt/keys.asc | apt-key add -
 apt-key adv --keyserver ha.pool.sks-keyservers.net --recv-keys 1F3045A5DF7587C3
 apt-key adv --keyserver ha.pool.sks-keyservers.net --recv-keys A87FF9DF48BF1C90
 apt-key adv --keyserver ha.pool.sks-keyservers.net --recv-keys 74A941BA219EC810
-wget -q -O - http://www.webmin.com/jcameron-key.asc | apt-key add -
 wget -q https://dl-ssl.google.com/linux/linux_signing_key.pub
 apt-key add linux_signing_key.pub
 rm -f linux_signing_key.pub
 rm -f deb-multimedia-keyring_2016.8.1_all.deb
-
-apt update
-apt list --upgradable
-apt upgrade -y
 
 echo "Adding sudo"
 apt install sudo
@@ -74,8 +60,58 @@ echo "Which user should be in sudo?"
 read -s usuario
 usermod -a -G sudo $usuario
 
+
+echo "Preparing for docker"
+curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+cat <<EOF > /etc/apt/sources.list.d/docker.list
+#curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+deb [arch=amd64] https://download.docker.com/linux/debian bullseye stable
+EOF
+
+echo "Preparing for google-chrome"
+wget https://dl-ssl.google.com/linux/linux_signing_key.pub
+apt-key add linux_signing_key.pub
+rm linux_signing_key.pub
+cat <<EOF > /etc/apt/sources.list.d/google.list
+# wget https://dl-ssl.google.com/linux/linux_signing_key.pub
+# sudo apt-key add linux_signing_key.pub
+deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main
+EOF
+
+echo "Preparing for Skype"
+wget https://go.skype.com/skypeforlinux-64.deb
+dpkg -i skypeforlinux-64.deb
+sleep 5 
+rm skypeforlinux-64.deb
+
+echo "Preparing for TOR"
+
+cat <<EOF > /etc/apt/sources.list.d/tor.list
+# curl https://deb.torproject.org/torproject.org/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.asc | gpg --import
+# gpg --export A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89 | apt-key add -
+deb https://deb.torproject.org/torproject.org buster main
+deb-src https://deb.torproject.org/torproject.org buster main
+EOF
+
+curl https://deb.torproject.org/torproject.org/A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89.asc | gpg --import
+gpg --export A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89 | sudo apt-key add -
+
+apt update
+apt install tor deb.torproject.org-keyring
+
+
+echo "Preparing for VSCode"
+
+curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
+sudo install -o root -g root -m 644 packages.microsoft.gpg /usr/share/keyrings/
+sudo sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list'
+sudo apt-get install apt-transport-https
+sudo apt-get update
+sudo apt-get install code # or code-insiders
+xdg-mime default code.desktop text/plain
+
 echo "Installing systems apps"
-apt install synaptic apt-xapian-index gdebi gksu yad apt-show-versions libio-pty-perl libauthen-pam-perl asciidoc xmlto uuid-dev libattr1-dev e2fsprogs f2fs-tools hfsutils hfsprogs jfsutils reiser4progs xfsprogs xfsdump lm-sensors upower zlib1g-dev libacl1-dev e2fslibs-dev libblkid-dev liblzo2-dev macfanctld unrar htop rofi i3blocks feh compton unclutter nbtscan nmap i3lock zathura suckless-tools surf puddletag sonata alarm-clock-applet lightdm-gtk-greeter lightdm-gtk-greeter-settings light-locker -y
+apt install synaptic apt-xapian-index gdebi gksu yad apt-show-versions libio-pty-perl libauthen-pam-perl asciidoc xmlto uuid-dev libattr1-dev e2fsprogs f2fs-tools hfsutils hfsprogs jfsutils reiser4progs xfsprogs xfsdump lm-sensors upower zlib1g-dev libacl1-dev e2fslibs-dev libblkid-dev liblzo2-dev macfanctld unrar htop rofi feh compton unclutter nbtscan nmap i3lock zathura suckless-tools surf puddletag sonata alarm-clock-applet lightdm-gtk-greeter lightdm-gtk-greeter-settings light-locker -y
 
 echo "Installing non-free system apps"
 apt install default-jre smartmontools fdupes zbackup software-properties-common dirmngr ranger restartd firmware-linux-nonfree gparted ntfs* testdisk gdebi firmware-linux -y
@@ -134,8 +170,8 @@ EOF
 mysql -u root -p < /tmp/sql-inject
 
 cd /var/www
-wget https://download.nextcloud.com/server/releases/nextcloud-18.0.1.zip
-unzip nextcloud-18.0.1.zip
+wget https://download.nextcloud.com/server/releases/nextcloud-18.0.5.zip
+unzip nextcloud-18.0.5.zip
 mkdir nextcloud/data
 chown -R www-data:www-data nextcloud
 a2ensite nextcloud.conf
@@ -190,8 +226,8 @@ git clone https://github.com/Airblader/i3 i3-gaps
 git clone https://github.com/mauricioph/wallpaper.git
 git clone https://github.com/mauricioph/myscripts.git
 git clone https://github.com/mauricioph/i3-stuff.git
-
-for i in myscripts/*
+git clone https://github.com/mauricioph/dwm.git
+for i in /opt/repositories/myscripts/*
 do cp "${i}" /usr/local/bin/
 chmod +x "/usr/local/bin/$(basename ${i})"
 done
@@ -204,6 +240,13 @@ cp i3-stuff/lock-fusy.sh /usr/local/bin
 chmod +x /usr/local/bin/lock-fusy.sh
 cp i3-stuff/systemd/wakelock.service /etc/systemd/system/
 sudo systemctl enable wakelock.service 
+
+function installdwm(){
+cd /opt/repositories/dwm
+make
+make clean install
+cd /opt/repositories/
+}
 
 function installi3(){
 cd /opt/repositories/i3-gaps
@@ -293,5 +336,20 @@ case ${pack} in
 	*) echo "No wallpaper installed"
 esac
 cd /opt/repositories
+
+echo "Should dwm be compiled now?"
+read dwmnow
+case ${dwmnow} in
+        y)
+        installdwm
+        ;;
+        yes)
+        installdwm
+        ;;
+        *)
+        echo "Skipping dwm compilation"
+        ;;
+esac
+
 echo "All is installed, here are the programs recently installed"
 dpkg-query -l 
