@@ -150,7 +150,7 @@ apt install blender blender-data blueman  bluetooth bluez bluez-obexd python-psu
 function nextcloud(){
 apt install mlocate apache2 libapache2-mod-php mariadb-client mariadb-server wget unzip bzip2 curl php php-common php-curl php-gd php-mbstring php-mysql php-xml php-zip php-intl php-apcu php-redis php-http-request
 
-cat <<EOF>> /etc/apache2/sites-available/nextcloud.conf
+cat <<EOF > /etc/apache2/sites-available/nextcloud.conf
 <VirtualHost *:80>
 ServerAdmin webmaster@localhost
 DocumentRoot /var/www/nextcloud
@@ -175,7 +175,7 @@ CustomLog ${APACHE_LOG_DIR}/nextcloud_access_log common
 </VirtualHost>
 EOF
 
-cat <<EOF>> /tmp/sql-inject
+cat <<EOF > /tmp/sql-inject
 CREATE DATABASE nextcloud;
 CREATE USER 'nextcloud'@'localhost' IDENTIFIED BY 'YOUR_PASSWORD_HERE';
 GRANT ALL PRIVILEGES ON nextcloud.* TO 'nextcloud'@'localhost';
