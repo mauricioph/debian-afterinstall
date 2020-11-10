@@ -6,12 +6,13 @@ Whenever I need to get the applications of my preference I just update the apt, 
 
 In other words, just after install these are the commands I run:
 
-'''$ apt update
+```$ apt update
 $ apt install git
 $ cd /tmp
 $ git clone https://github.com/mauricioph/debian-afterinstall.git
 $ chmod +x debian-afterinstall
-$ ./debian-afterinstall'''
+$ ./debian-afterinstall
+```
 
 This will install sudo and add a user to the group
 Add to the sources.list the contrib and non-free repositories
