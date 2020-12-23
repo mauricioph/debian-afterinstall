@@ -11,31 +11,6 @@ fi
 
 [ -d /sys/firmware/efi ] && echo "EFI boot on HDD" || echo "Legacy boot on HDD"
 
-echo "Adding contrib non-free list to apt"
-cat > /etc/apt/sources.list << EOF
-# Criado por mauricio atraves do script debian-afterinstall.sh
-#------------------------------------------------------------------------------#
-#                   OFFICIAL UK DEBIAN REPOSITORY
-#------------------------------------------------------------------------------#
-# Edit these lines below based on the output from this page pointing your country repositories
-# https://debgen.simplylinux.ch
-#
-
-###### Debian Main Repos
-deb http://deb.debian.org/debian/ stable main non-free contrib
-deb-src http://deb.debian.org/debian/ stable main non-free contrib
-
-deb http://security.debian.org/debian-security stable/updates main contrib non-free
-deb-src http://security.debian.org/debian-security stable/updates main contrib non-free
-
-# buster-updates, previously known as 'volatile'
-deb http://deb.debian.org/debian/ stable-updates main contrib non-free
-deb-src http://deb.debian.org/debian/ stable-updates main contrib non-free
-
-# End of the editable area
-
-EOF
-
 echo "Getting the signature of the repositories"
 
 apt install debian-keyring -y
@@ -51,30 +26,6 @@ wget -q https://dl-ssl.google.com/linux/linux_signing_key.pub
 apt-key add linux_signing_key.pub
 rm -f linux_signing_key.pub
 rm -f deb-multimedia-keyring_2016.8.1_all.deb
-
-echo "Adding sudo"
-apt install sudo
-echo "Which user should be in sudo?"
-read -s usuario
-usermod -a -G sudo $usuario
-
-
-echo "Preparing for docker"
-curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
-cat <<EOF > /etc/apt/sources.list.d/docker.list
-#curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
-deb [arch=amd64] https://download.docker.com/linux/debian buster stable
-EOF
-
-echo "Preparing for google-chrome"
-wget https://dl-ssl.google.com/linux/linux_signing_key.pub
-apt-key add linux_signing_key.pub
-rm linux_signing_key.pub
-cat <<EOF > /etc/apt/sources.list.d/google.list
-# wget https://dl-ssl.google.com/linux/linux_signing_key.pub
-# sudo apt-key add linux_signing_key.pub
-deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main
-EOF
 
 echo "Preparing for Skype"
 wget https://go.skype.com/skypeforlinux-64.deb
@@ -98,50 +49,50 @@ apt update
 apt install tor 
 
 echo "Installing systems apps"
-apt install synaptic apt-xapian-index arandr asciinema atomicparsley  btrfs-progs build-essential busybox bzip2 bzip2-doc ca-certificates  ca-certificates-java ca-certificates-mono cabextract calf-plugins calibre calibre-bin gdebi yad apt-show-versions libio-pty-perl libauthen-pam-perl asciidoc xmlto uuid-dev libattr1-dev e2fsprogs f2fs-tools hfsutils jfsutils reiser4progs xfsprogs xfsdump lm-sensors upower zlib1g-dev libacl1-dev e2fslibs-dev libblkid-dev liblzo2-dev macfanctld unrar htop rofi feh compton unclutter nbtscan nmap i3lock zathura suckless-tools surf puddletag sonata lightdm-gtk-greeter lightdm-gtk-greeter-settings ccd2iso cdparanoia cdrdao certbot cgroupfs-mount light-locker -y
+apt install synaptic apt-xapian-index arandr asciinema atomicparsley  btrfs-progs build-essential busybox bzip2 bzip2-doc ca-certificates  ca-certificates-java ca-certificates-mono cabextract calf-plugins calibre calibre-bin gdebi yad apt-show-versions libio-pty-perl libauthen-pam-perl asciidoc xmlto uuid-dev libattr1-dev e2fsprogs f2fs-tools hfsutils jfsutils reiser4progs xfsprogs xfsdump lm-sensors upower zlib1g-dev libacl1-dev e2fslibs-dev libblkid-dev liblzo2-dev unrar htop rofi feh unclutter nbtscan nmap i3lock zathura suckless-tools surf puddletag sonata ccd2iso cdparanoia cdrdao certbot cgroupfs-mount  -y
 
 echo "Installing non-free system apps"
-apt install amd64-microcode default-jre smartmontools fdupes zbackup dirmngr ranger restartd firmware-linux-nonfree gparted ntfs* testdisk gdebi firmware-linux -y
+apt install amd64-microcode default-jre smartmontools fdupes zbackup dirmngr ranger restartd firmware-linux-nonfree gparted ntfs-3g testdisk gdebi firmware-linux -y
 
 echo "Installing base for i3-gaps"
-apt install gcc make fancontrol read-edid i2c-tools conky-all fonts-font-awesome dh-autoreconf libxcb-keysyms1-dev libpango1.0-dev libxcb-util0-dev xcb libxcb1-dev libxcb-icccm4-dev libyajl-dev libev-dev libxcb-xkb-dev libxcb-cursor-dev libxkbcommon-dev libxcb-xinerama0-dev libxkbcommon-x11-dev libstartup-notification0-dev libxcb-randr0-dev libxcb-xrm0 libxcb-xrm-dev libxcb-shape0-dev
+apt install gcc make fancontrol conky-all fonts-font-awesome dh-autoreconf libxcb-keysyms1-dev libpango1.0-dev libxcb-util0-dev xcb libxcb1-dev libxcb-icccm4-dev libyajl-dev libev-dev libxcb-xkb-dev libxcb-cursor-dev libxkbcommon-dev libxcb-xinerama0-dev libxkbcommon-x11-dev libstartup-notification0-dev libxcb-randr0-dev libxcb-xrm0 libxcb-xrm-dev libxcb-shape0-dev
 
 echo "Installing fonts"
 apt install fontconfig fontconfig-config fonts-cantarell fonts-crosextra-caladea fonts-crosextra-carlito fonts-dejavu fonts-dejavu-core fonts-dejavu-extra fonts-droid-fallback fonts-font-awesome fonts-freefont-ttf fonts-glyphicons-halflings fonts-inter fonts-lato fonts-liberation fonts-liberation2 fonts-linuxlibertine fonts-lyx fonts-mathjax fonts-noto fonts-noto-cjk fonts-noto-cjk-extra fonts-noto-color-emoji fonts-noto-core fonts-noto-extra fonts-noto-hinted fonts-noto-mono fonts-noto-ui-core fonts-noto-ui-extra fonts-noto-unhinted fonts-opensymbol fonts-quicksand fonts-roboto-hinted fonts-roboto-unhinted fonts-sil-gentium fonts-sil-gentium-basic fonts-symbola fonts-urw-base35 fonts-wine ttf-bitstream-vera ttf-mscorefonts-installer tzdata -y
 
 echo "Instaling miscelaneuos"
-apt install chromium chromium-common chromium-lwn4chrome chromium-sandbox cinnamon-desktop-data cinnamon-l10n cmake cmake-data cmospwd code collectd-core colord colord-data comerr-dev:amd64 comprez compton conky conky-all conky-std console-setup console-setup-linux coreutils cups cups-browsed cups-bsd cups-client cups-common cups-core-drivers cups-daemon cups-filters cups-filters-core-drivers cups-ipp-utils cups-pk-helper cups-ppdc cups-server-common curl darkslide darktable dash davfs2 dos2unix dosfstools dunst dvdauthor e2fsprogs e2fsprogs-l10n easy-rsa easytag ebook-speaker efibootmgr eject exfat-utils exif exifprobe exiftags exiftran f2fs-tools facedetect fakeroot fatcat fdisk fdupes feh ffmpeg fgallery 
+apt install chromium chromium-common chromium-lwn4chrome chromium-sandbox cmake cmake-data collectd-core colord colord-data comerr-dev:amd64 comprez conky conky-all console-setup console-setup-linux coreutils cups cups-browsed cups-bsd cups-client cups-common cups-core-drivers cups-daemon cups-filters cups-filters-core-drivers cups-ipp-utils cups-pk-helper cups-ppdc cups-server-common curl darkslide darktable dash davfs2 dos2unix dosfstools dunst dvdauthor e2fsprogs e2fsprogs-l10n easy-rsa easytag ebook-speaker efibootmgr eject exfat-utils exif exifprobe exiftags exiftool moreutils exiftran f2fs-tools facedetect fakeroot fatcat fdisk fdupes feh ffmpeg fgallery 
 
 echo "Instaling miscelaneuos 2"
 
-apt install firefox-esr firmware-amd-graphics firmware-linux firmware-linux-free firmware-linux-nonfree firmware-misc-nonfree flac flactag flowblade foomatic-db-compressed-ppds foomatic-db-engine foremost forensics-extra four-in-a-row freepats freerdp2-dev freetype2-doc frei0r-plugins ftp funcoeszz fuse3 fwupd fwupd-amd64-signed ufw unar unrar unrar-free unzip update-glx
+apt install firefox-esr firmware-amd-graphics firmware-linux firmware-linux-free firmware-linux-nonfree firmware-misc-nonfree flac flactag flowblade freetype2-doc frei0r-plugins ftp funcoeszz fuse3 fwupd fwupd-amd64-signed ufw unar unrar unrar-free unzip update-glx
 
 echo "Instaling miscelaneuos 3"
 
-apt install gdebi gdebi-core gdisk geany geany-common geany-plugin-gproject geany-plugin-projectorganizer geany-plugins-common genisoimage gimp gimp-data gimp-data-extras git git-man gnupg gnupg-agent gnupg-l10n gnupg-utils gparted gperf gpg gpg-agent gpg-wks-client gpg-wks-server gpgconf gpgsm gpgv xscreensaver xscreensaver-data xserver-common xserver-xorg xserver-xorg-core xserver-xorg-input-all xserver-xorg-input-libinput xserver-xorg-input-wacom xserver-xorg-legacy xserver-xorg-video-all xserver-xorg-video-fbdev xterm xtightvncviewer xtrans-dev xxd xz-utils
+apt install gdebi gdebi-core gdisk geany geany-common geany-plugin-gproject geany-plugin-projectorganizer geany-plugins-common genisoimage gimp gimp-data gimp-data-extras git git-man gnupg gnupg-agent gnupg-l10n gnupg-utils gparted gperf gpg gpg-agent gpg-wks-client gpg-wks-server gpgconf gpgsm gpgv xscreensaver xscreensaver-data xserver-common xserver-xorg xserver-xorg-core xserver-xorg-input-all xserver-xorg-input-libinput xserver-xorg-input-wacom xserver-xorg-legacy xserver-xorg-video-all xserver-xorg-video-fbdev xterm xxd xz-utils
 
 echo "Instaling miscelaneuos 4"
 
-apt install growisofs grub-common grub-efi grub-efi-amd64 grub-efi-amd64-bin grub-efi-amd64-dbg grub-efi-amd64-signed grub2-common gsfonts harvid hcxdumptool hddtemp hdparm heartbleeder hexcompare hexedit hfsutils hicolor-icon-theme hitori horst hostname hping3 htop httrack hwdata hwinfo imagemagick imagemagick-6-common imagemagick-6.q16 zathura zathura-cb zathura-djvu zathura-pdf-poppler zathura-ps zbackup zeitgeist-core zenity zenity-common zip zlib1g  zlib1g-dev zpaq
+apt install growisofs gsfonts hddtemp hdparm heartbleeder hexcompare hexedit hfsutils hicolor-icon-theme hitori horst hostname hping3 htop httrack hwdata hwinfo imagemagick imagemagick-6-common imagemagick-6.q16 zathura zathura-cb zathura-djvu zathura-pdf-poppler zathura-ps zbackup zeitgeist-core zenity zenity-common zip zlib1g  zlib1g-dev zpaq
 
 echo "Instaling miscelaneuos 5"
 
-apt install initramfs-tools initramfs-tools-core inkscape install-info installation-report jackd2 jackd2-firewire java-common javascript-common jdupes john john-data kbd keyboard-configuration keyutils krita krita-data
+apt install inkscape jdupes john john-data kbd keyboard-configuration keyutils krita krita-data
 
 echo "Instaling miscelaneuos 6"
 
-apt install lame laptop-detect lsb-base lsb-release lsdvd lshw lsof lua-bitop  lua-cjson  lua-expat  lua-json lua-lpeg  lua-socket  lua5.3 lvm2 lxappearance lxappearance-obconf lxsession lxsession-data lynis lynx lynx-common lz4 lzop m4 mailutils mailutils-common make man-db manpages manpages-dev mariadb-client mariadb-common mcomix mdns-scan media-player-info mediainfo mediainfo-gui memstat mencoder menu menu-xdg 
+apt install lame laptop-detect lsb-base lsb-release lsdvd lshw lsof lua-bitop  lua-cjson  lua-expat  lua-json lua-lpeg  lua-socket  lua5.3 lvm2 lxappearance lxappearance-obconf lxsession lxsession-data lxdm lynis lynx lynx-common lz4 lzop m4 mailutils mailutils-common make man-db manpages manpages-dev mariadb-client mariadb-common mcomix mdns-scan media-player-info mediainfo mediainfo-gui memstat mencoder menu menu-xdg 
 
 echo "Instaling miscelaneuos 7"
 
-apt install mesa-utils mesa-va-drivers  meson mime-support mixxx mixxx-data mkvtoolnix mkvtoolnix-gui moreutils mp3info mpack mpc mpd mpg123 mpg321 mplayer mplayer-gui mplayer-skin-blue mpv mscompress mtools nano nasm nbtscan ncmpcpp ncompress ncurses-base ncurses-bin ncurses-term ndiff netdata net-tools netbase netcat-openbsd netcat-traditional netdiscover netpbm nfs-common nftables ngrep ninja-build nmap nmap-common node-highlight.js node-html5shiv node-jquery node-normalize.css nodejs nodejs-doc nomarch notification-daemon notify-osd nstreams ntfs-3g ntfs-3g-dev
+apt install mesa-utils mesa-va-drivers meson mime-support mixxx mixxx-data mkvtoolnix mkvtoolnix-gui moreutils mp3info mpack mpc mpd mpg123 mpg321 mplayer mplayer-gui mplayer-skin-blue mpv mscompress mtools nano nasm nbtscan ncmpcpp ncompress ncurses-base ncurses-bin ncurses-term ndiff netdata net-tools netbase netcat-openbsd netcat-traditional netdiscover netpbm nfs-common nftables ngrep ninja-build nmap nmap-common node-highlight.js node-html5shiv node-jquery node-normalize.css nodejs nodejs-doc nomarch notification-daemon notify-osd nstreams ntfs-3g ntfs-3g-dev
 
 echo "Instaling miscelaneuos 8"
 
 apt install openssh-client openssh-server openssh-sftp-server openssl openvpn optipng os-prober osinfo-db oxygen-icon-theme patchage qjackctl qjackrcd qtractor reiser4progs reiserfsprogs samba samba-common samba-common-bin samba-dev  samba-dsdb-modules  samba-libs  samba-vfs-modules  sane-utils sbsigntool scour screenfetch scrot sxiv synaptic sysstat tor torsocks 
 
-echo "Installing php"
-apt install php php-bz2 php-common php-curl php-gd php-google-recaptcha php-imagick php-json php-mbstring php-memcache php-mysql php-pear php-phpmyadmin-motranslator php-phpmyadmin-shapefile php-phpmyadmin-sql-parser php-phpseclib php-psr-cache php-psr-container php-psr-log php-sqlite3 php-symfony-cache php-symfony-cache-contracts php-symfony-expression-language php-symfony-service-contracts php-symfony-var-exporter php-tcpdf php-twig php-twig-extensions php-xml php-zip 
+# echo "Installing php"
+# apt install php php-bz2 php-common php-curl php-gd php-google-recaptcha php-imagick php-json php-mbstring php-memcache php-mysql php-pear php-phpmyadmin-motranslator php-phpmyadmin-shapefile php-phpmyadmin-sql-parser php-phpseclib php-psr-cache php-psr-container php-psr-log php-sqlite3 php-symfony-cache php-symfony-cache-contracts php-symfony-expression-language php-symfony-service-contracts php-symfony-var-exporter php-tcpdf php-twig php-twig-extensions php-xml php-zip 
 
 echo "Installing Internet of Things apps"
 apt install rsync openssh-server openssl openvpn samba perl sqlite3 ufw mtools -y
@@ -261,8 +212,9 @@ chmod +x /usr/local/bin/lock-fusy.sh
 cp i3-stuff/systemd/wakelock.service /etc/systemd/system/
 sudo systemctl enable wakelock.service 
 
-function installdwm(){
+function installmwm(){
 cd /opt/repositories/mwm
+apt install libxinerama-dev -y
 make
 make clean install
 cd /opt/repositories/
@@ -357,14 +309,14 @@ case ${pack} in
 esac
 cd /opt/repositories
 
-echo "Should dwm be compiled now?"
+echo "Should mwm be compiled now?"
 read dwmnow
 case ${dwmnow} in
         y)
-        installdwm
+        installmwm
         ;;
         yes)
-        installdwm
+        installmwm
         ;;
         *)
         echo "Skipping dwm compilation"
