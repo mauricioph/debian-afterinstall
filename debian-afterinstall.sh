@@ -33,11 +33,11 @@ deb-src http://deb.debian.org/debian/ stable main contrib non-free
 deb http://deb.debian.org/debian/ stable-updates main contrib non-free
 deb-src http://deb.debian.org/debian/ stable-updates main contrib non-free
 
-deb http://deb.debian.org/debian-security stable/updates main
-deb-src http://deb.debian.org/debian-security stable/updates main
+deb http://deb.debian.org/debian-security bullseye-security main
+deb-src http://deb.debian.org/debian-security bullseye-security main
 
-deb http://ftp.debian.org/debian buster-backports main
-deb-src http://ftp.debian.org/debian buster-backports main
+# deb http://ftp.debian.org/debian buster-backports main
+# deb-src http://ftp.debian.org/debian buster-backports main
 
 EOF
 
@@ -92,14 +92,6 @@ cat <<EOF > /etc/apt/sources.list.d/google.list
 # sudo apt-key add linux_signing_key.pub
 deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main
 EOF
-
-clear
-echo "Preparing for Skype"
-sleep 3
-wget https://go.skype.com/skypeforlinux-64.deb
-dpkg -i skypeforlinux-64.deb
-sleep 5 
-rm -f skypeforlinux-64.deb
 
 clear
 echo "Preparing for TOR"
@@ -236,8 +228,8 @@ EOF
 mysql -u root -p < /tmp/sql-inject
 
 cd /var/www
-wget https://download.nextcloud.com/server/releases/nextcloud-18.0.5.zip
-unzip nextcloud-18.0.5.zip
+wget https://download.nextcloud.com/server/releases/nextcloud-22.0.0.zip
+unzip nextcloud-22.0.0.zip
 mkdir nextcloud/data
 chown -R www-data:www-data nextcloud
 a2ensite nextcloud.conf
